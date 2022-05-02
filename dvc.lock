@@ -1,0 +1,51 @@
+schema: '2.0'
+stages:
+  load_data:
+    cmd: python src/stage_01_load_and_save_data.py --config=params.yaml
+    deps:
+    - path: src/stage_01_load_and_save_data.py
+      md5: fff4260da2ce383b85087c7ca3933508
+      size: 869
+    params:
+      params.yaml:
+        artifacts.raw_local_data: artifacts/raw_local_data_dir/data.csv
+        data_source.drive_source: .dvc_remote/temp.csv
+    outs:
+    - path: artifacts/raw_local_data_dir/data.csv
+      md5: 088b605a7c14392fd1f76aea691212bc
+      size: 863
+  split_data:
+    cmd: python src/stage_02_preprocess.py --config=params.yaml
+    deps:
+    - path: artifacts/raw_local_data_dir/data.csv
+      md5: 088b605a7c14392fd1f76aea691212bc
+      size: 863
+    - path: src/stage_02_preprocess.py
+      md5: 94d12f73c4936fdaa65d7f29347d419b
+      size: 2899
+    params:
+      params.yaml:
+        artifacts.preprocess_data.processed_data_dir: artifacts/processed_data
+        artifacts.preprocess_data.train_path: artifacts/processed_data/train.csv
+        artifacts.raw_local_data: artifacts/raw_local_data_dir/data.csv
+    outs:
+    - path: artifacts/processed_data/train.csv
+      md5: a6e75caeb8fce2b9853041a1b8959959
+      size: 1467
+  train:
+    cmd: python src/stage_03_train.py --config=params.yaml
+    deps:
+    - path: artifacts/processed_data/train.csv
+      md5: a6e75caeb8fce2b9853041a1b8959959
+      size: 1467
+    - path: src/stage_03_train.py
+      md5: e0a37b44790936a1a2c5cec38bcf3f92
+      size: 4983
+    params:
+      params.yaml:
+        artifacts.preprocess_data.processed_data_dir: artifacts/processed_data
+        base.random_state: 42
+    outs:
+    - path: artifacts/saved_models/model.joblib
+      md5: 85ba81c91e7bbca7aedd65f5e5303279
+      size: 467050273

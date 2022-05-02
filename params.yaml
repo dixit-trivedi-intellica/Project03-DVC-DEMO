@@ -1,0 +1,41 @@
+base:
+  project: PROJECT01_DVC_DEMO
+  random_state : 42
+  target_col: quality
+  test_size: 0.2
+
+data_source: 
+  drive_source : .dvc_remote/temp.csv
+
+artifacts:
+  artifacts_dir: artifacts
+
+  raw_local_data_dir: artifacts/raw_local_data_dir
+  raw_local_data: artifacts/raw_local_data_dir/data.csv
+
+  preprocess_data:
+    processed_data_dir: artifacts/processed_data
+    train_path: artifacts/processed_data/train.csv
+
+  reports:
+    reports_dir: artifacts/report
+    params: artifacts/report/params.json
+    scores: artifacts/report/scores.json 
+  
+  train_params:
+    labels_cols_34 : ['appreciation', 'benefits', 'career', 'communication', 'customer_focus', 'decision_making', 'future_vision', 'innovation', 'leadership', 'learning_growth_and_development', 'organizational_mission', 'pay', 'teamwork_and_collaboration', 'tools_technology_and_equipment', 'training','trust', 'work_life_flexibility', 'autonomy', 'change_management', 'company_performance', 'company_strategy', 'culture', 'DEI', 'fairness','hostility', 'immediate_manager_supervisor', 'meaningfulness', 'organizational_values', 'physical_work_environment', 'processes_and_systems','products_and_services', 'psychological_safety', 'resources', 'stress_and_pressure']
+    comment_col : "pre_process_text"
+    tgt_col : "labels"
+    batch_size : 16
+
+  model_dir: artifacts/saved_models
+  model_path: artifacts/saved_models/model.joblib 
+  
+estimators: 
+  ElasticNet:
+    params:
+      alpha: 0.9
+      l1_ratio: 0.4
+
+
+  
